@@ -8,7 +8,7 @@ async function loadHistory() {
 
     try {
         // Fetch files from server
-        const response = await fetch('http://localhost:3000/api/invoices');
+        const response = await fetch('/api/invoices');
         const diskInvoices = await response.json();
 
         // Get metadata from localStorage
@@ -88,7 +88,7 @@ async function loadHistory() {
                                     <td>${inv.buyerName}</td>
                                     <td style="font-weight: 600;">${inv.amount !== 'N/A' ? '₹ ' + inv.amount : 'N/A'}</td>
                                     <td>
-                                        <a href="http://localhost:3000${inv.url}" target="_blank" class="btn btn-primary btn-sm" style="text-decoration: none; display: inline-block;">View PDF</a>
+                                        <a href="${inv.url}" target="_blank" class="btn btn-primary btn-sm" style="text-decoration: none; display: inline-block;">View PDF</a>
                                         <button class="btn btn-primary btn-sm" onclick="downloadInvoice('${inv.invoiceNo}')">Print Window</button>
                                         <button class="btn btn-danger btn-sm" onclick="deleteInvoice('${inv.invoiceNo}')">Delete</button>
                                     </td>
@@ -131,7 +131,7 @@ function downloadInvoice(invoiceNo) {
         const safeFilename = `${invoice.buyerName.replace(/[^a-zA-Z0-9]/g, '_')}_${invoice.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
         // Also save to server if not already there (or just to be sure)
-        fetch('http://localhost:3000/save-invoice', {
+        fetch('/save-invoice', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
