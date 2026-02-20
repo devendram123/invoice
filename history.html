@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice History - Invoice Pro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="nav-bar">
+        <div class="nav-logo">Invoice Pro</div>
+        <div class="nav-links">
+            <a href="index.html">Create Invoice</a>
+            <a href="history.html" class="active">Invoice History</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="history-header">
+            <h1>Generated Invoices</h1>
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by Buyer or ID..." onkeyup="filterInvoices()">
+            </div>
+        </div>
+
+        <div id="historyContent">
+            <!-- Invoices grouped by month will be injected here -->
+            <div class="no-data" id="noData"
+                style="display: none; text-align: center; padding: 50px; background: white; border-radius: 8px;">
+                <h3>No invoices found</h3>
+                <p>Generate some invoices to see them here.</p>
+                <a href="index.html" class="btn btn-primary"
+                    style="display: inline-block; margin-top: 20px; text-decoration: none;">Create New Invoice</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden container for printing/generating PDF of historical invoices -->
+    <div id="printContainer" style="display: none;"></div>
+
+    <script src="history.js"></script>
+</body>
+
+</html>

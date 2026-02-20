@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <nav class="nav-bar">
+        <div class="nav-logo">Invoice Pro</div>
+        <div class="nav-links">
+            <a href="index.html" class="active">Create Invoice</a>
+            <a href="history.html">Invoice History</a>
+        </div>
+    </nav>
+    <div class="container">
+        <!-- Invoice Form Section -->
+        <div class="invoice-form" id="invoiceForm">
+            <h2>Create New Invoice</h2>
+            
+            <!-- Company Details -->
+            <div class="section">
+                <h3>Company Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Company Name:</label>
+                        <input type="text" id="companyName" value="SMART MANUFACTURING">
+                    </div>
+                    <div class="form-group">
+                        <label>Business Type:</label>
+                        <input type="text" id="companyBusiness" value="INSTRUMENTATION, HYDRAULIC & PNEUMATIC - TUBE FITTINGS, VALVE, MANIFOLD, & QRC IN S.S., M.S. & BRASS (MAKERS)">
+                    </div>
+                    <div class="form-group">
+                        <label>Company Address:</label>
+                        <textarea id="companyAddress" rows="3">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400708</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile:</label>
+                        <input type="text" id="companyMobile" value="7506828465">
+                    </div>
+                    <div class="form-group">
+                        <label>Email:</label>
+                        <input type="email" id="companyEmail" value="smartmanufacturing86@gmail.com">
+                    </div>
+                    <div class="form-group">
+                        <label>GSTIN/UIN:</label>
+                        <input type="text" id="companyGSTIN" value="27FRIPM0678C1ZN">
+                    </div>
+                    <div class="form-group">
+                        <label>State & Code:</label>
+                        <input type="text" id="companyState" value="Maharashtra, Code: 27">
+                    </div>
+                    <div class="form-group">
+                        <label>Challan Number:</label>
+                        <input type="text" id="challanNumber" placeholder="e.g., 54,55,55,56">
+                    </div>
+                    <div class="form-group">
+                        <label>Bank Name:</label>
+                        <input type="text" id="bankName" value="TJSB" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Branch Name:</label>
+                        <input type="text" id="branchName" value="Mulund" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Account No:</label>
+                        <input type="text" id="accountNo" value="106120100000307" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>IFSC Code:</label>
+                        <input type="text" id="ifscCode" value="TJSB0000106" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Authorized Signatory Name:</label>
+                        <input type="text" id="signatoryName" placeholder="Enter signatory name">
+                    </div>
+                    <div class="form-group">
+                        <label>Upload Signature Image (Optional):</label>
+                        <input type="file" id="signatureFile" accept="image/*" onchange="loadSignature(this)">
+                        <img id="signaturePreview" style="max-width: 200px; margin-top: 10px; display: none;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buyer/Client Details -->
+            <div class="section">
+                <h3>Buyer Details</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Buyer Name:</label>
+                        <input type="text" id="buyerName" placeholder="Enter buyer name">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer Address:</label>
+                        <textarea id="buyerAddress" rows="3" placeholder="Enter address"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer GSTIN/UIN:</label>
+                        <input type="text" id="buyerGSTIN" placeholder="Enter GSTIN">
+                    </div>
+                    <div class="form-group">
+                        <label>Buyer State & Code:</label>
+                        <input type="text" id="buyerState" placeholder="e.g., Karnataka, Code: 29">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoice Details -->
+            <div class="section">
+                <h3>Invoice Information</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Invoice No:</label>
+                        <input type="text" id="invoiceNo" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Invoice Date:</label>
+                        <input type="date" id="invoiceDate">
+                    </div>
+                    <div class="form-group">
+                        <label>Reference No:</label>
+                        <input type="text" id="referenceNo" placeholder="Optional">
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Note:</label>
+                        <input type="text" id="deliveryNote" placeholder="Optional">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Items Section -->
+            <div class="section">
+                <h3>Items</h3>
+                <div class="items-header">
+                    <button class="btn btn-add" onclick="addItem()">+ Add Item</button>
+                </div>
+                <table class="items-table" id="itemsTable">
+                    <thead>
+                        <tr>
+                            <th>Sl</th>
+                            <th>Description</th>
+                            <th>HSN/SAC</th>
+                            <th>Quantity</th>
+                            <th>Rate</th>
+                            <th>Amount</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itemsBody">
+                        <!-- Items will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Tax Configuration -->
+            <div class="section">
+                <h3>Tax Configuration</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>CGST (%):</label>
+                        <input type="number" id="cgstRate" value="9" step="0.01" onchange="calculateTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label>SGST (%):</label>
+                        <input type="number" id="sgstRate" value="9" step="0.01" onchange="calculateTotal()">
+                    </div>
+                    <div class="form-group">
+                        <label>IGST (%):</label>
+                        <input type="number" id="igstRate" value="0" step="0.01" onchange="calculateTotal()">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="generateInvoice()">Generate Invoice</button>
+                <button class="btn btn-secondary" onclick="resetForm()">Reset</button>
+            </div>
+        </div>
+
+        <!-- Invoice Preview Section -->
+        <div class="invoice-preview" id="invoicePreview" style="display: none;">
+            <div class="preview-actions">
+                <button class="btn btn-primary" onclick="printInvoice()">Print Invoice</button>
+                <button class="btn btn-secondary" onclick="editInvoice()">Edit</button>
+                <button class="btn btn-success" onclick="saveAsPDF()">Save as PDF</button>
+            </div>
+            
+            <div class="invoice-document" id="invoiceDocument">
+                <!-- Invoice will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
