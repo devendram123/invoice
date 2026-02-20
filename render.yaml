@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: invoice-pro-system
+    env: docker
+    plan: free
+    region: ohio
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: PUPPETEER_SKIP_CHROMIUM_DOWNLOAD
+        value: "true"
+    autoDeploy: true
