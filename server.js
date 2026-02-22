@@ -20,13 +20,19 @@ if (!fs.existsSync(INVOICE_DIR)) {
 }
 
 app.post('/save-invoice', async (req, res) => {
-    const { html, filename } = req.body;
+    const { html, filename, metadata } = req.body;
 
     if (!html || !filename) {
         return res.status(400).send('HTML and filename are required');
     }
 
     try {
+        // Save metadata alongside PDF
+        if (metadata) {
+            const jsonFilename = filename.replace('.pdf', '.json');
+            const jsonPath = path.join(INVOICE_DIR, jsonFilename);
+            fs.writeFileSync(jsonPath, JSON.stringify({ ...metadata, html }, null, 2));
+        }
         const browser = await puppeteer.launch({
             headless: 'new',
             executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
@@ -91,15 +97,55 @@ app.get('/api/invoices', (req, res) => {
         const files = fs.readdirSync(INVOICE_DIR);
         const invoices = files.filter(file => file.endsWith('.pdf')).map(file => {
             const stats = fs.statSync(path.join(INVOICE_DIR, file));
+            const jsonFilename = file.replace('.pdf', '.json');
+            const jsonPath = path.join(INVOICE_DIR, jsonFilename);
+            let metadata = {};
+
+            if (fs.existsSync(jsonPath)) {
+                try {
+                    metadata = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+                } catch (e) {
+                    console.error(`Error reading metadata for ${file}:`, e);
+                }
+            }
+
             return {
                 filename: file,
                 createdAt: stats.birthtime,
-                url: `/invoices/${file}`
+                url: `/invoices/${file}`,
+                metadata: metadata // Contains amount, buyerName, date, html
             };
         });
         res.json(invoices);
     } catch (err) {
         res.status(500).send('Error reading directory: ' + err.message);
+    }
+});
+
+app.delete('/api/invoices/:filename', (req, res) => {
+    const filename = req.params.filename;
+    const filePath = path.join(INVOICE_DIR, filename);
+    const jsonPath = filePath.replace('.pdf', '.json');
+
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    if (fs.existsSync(jsonPath)) fs.unlinkSync(jsonPath);
+
+    console.log(`Invoice and metadata deleted: ${filename}`);
+    res.send({ success: true, message: 'Invoice and metadata deleted successfully' });
+});
+
+app.delete('/api/invoices', (req, res) => {
+    try {
+        const files = fs.readdirSync(INVOICE_DIR);
+        files.forEach(file => {
+            if (file.endsWith('.pdf') || file.endsWith('.json')) {
+                fs.unlinkSync(path.join(INVOICE_DIR, file));
+            }
+        });
+        console.log('All invoices and metadata deleted from server');
+        res.send({ success: true, message: 'All history cleared successfully' });
+    } catch (err) {
+        res.status(500).send('Error clearing invoices: ' + err.message);
     }
 });
 

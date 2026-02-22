@@ -478,15 +478,21 @@ function saveAsPDF() {
         html: document.getElementById('invoiceDocument').innerHTML
     });
 
-    const safeFilename = `${buyerName.replace(/[^a-zA-Z0-9]/g, '_')}_${invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+    const safeFilename = `${invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
-    // Auto-save to server
+    // Auto-save to server (including metadata and HTML)
     fetch('/save-invoice', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             html: document.getElementById('invoiceDocument').innerHTML,
-            filename: safeFilename
+            filename: safeFilename,
+            metadata: {
+                invoiceNo: invoiceNo,
+                buyerName: buyerName,
+                invoiceDate: invoiceDate,
+                amount: grandTotal
+            }
         })
     }).then(response => response.json())
         .then(data => console.log('Server response:', data))

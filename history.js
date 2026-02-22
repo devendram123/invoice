@@ -15,37 +15,32 @@ async function loadHistory() {
         const history = JSON.parse(localStorage.getItem('invoice_history') || '[]');
 
         if (diskInvoices.length === 0 && history.length === 0) {
+            container.innerHTML = ''; // Clear container
             noData.style.display = 'block';
             return;
         }
 
         noData.style.display = 'none';
 
-        // Merge sources: Use disk as source of truth for presence, localStorage for metadata
+        // Merge sources: Prioritize Server Metadata, fallback to disk parsing/localStorage
         const mergedHistory = diskInvoices.map(file => {
-            // Try to find metadata in localStorage
-            // Filename format: BuyerName_InvoiceNo.pdf
+            const serverMeta = file.metadata || {};
+
+            // Try to find metadata in localStorage as backup
             const stored = history.find(inv => {
-                const safeName = `${inv.buyerName.replace(/[^a-zA-Z0-9]/g, '_')}_${inv.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+                const safeName = `${inv.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
                 return safeName === file.filename;
             });
 
-            if (stored) {
-                return { ...stored, url: file.url, fromDisk: true };
-            } else {
-                // Fallback parsing from filename if not in localStorage
-                const parts = file.filename.replace('.pdf', '').split('_');
-                const invoiceNo = parts.pop();
-                const buyerName = parts.join(' ').replace(/_/g, ' ');
-                return {
-                    invoiceNo: invoiceNo || 'Unknown',
-                    buyerName: buyerName || file.filename,
-                    invoiceDate: file.createdAt,
-                    amount: 'N/A',
-                    url: file.url,
-                    fromDisk: true
-                };
-            }
+            return {
+                invoiceNo: serverMeta.invoiceNo || (stored ? stored.invoiceNo : file.filename.replace('.pdf', '')),
+                buyerName: serverMeta.buyerName || (stored ? stored.buyerName : 'Unknown'),
+                invoiceDate: serverMeta.invoiceDate || file.createdAt,
+                amount: serverMeta.amount || (stored ? stored.amount : 'N/A'),
+                html: serverMeta.html || (stored ? stored.html : ''),
+                url: file.url,
+                fromDisk: true
+            };
         });
 
         // Group by Month/Year
@@ -123,26 +118,36 @@ function filterInvoices() {
     });
 }
 
-function downloadInvoice(invoiceNo) {
+async function downloadInvoice(invoiceNo) {
+    // 1. Try to find in localStorage (fastest)
     const history = JSON.parse(localStorage.getItem('invoice_history') || '[]');
-    const invoice = history.find(inv => inv.invoiceNo === invoiceNo);
+    let invoice = history.find(inv => inv.invoiceNo === invoiceNo);
 
-    if (invoice) {
-        const safeFilename = `${invoice.buyerName.replace(/[^a-zA-Z0-9]/g, '_')}_${invoice.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+    // 2. If not in localStorage, fetch from server metadata
+    if (!invoice) {
+        try {
+            const response = await fetch('/api/invoices');
+            const diskInvoices = await response.json();
+            const serverInvoice = diskInvoices.find(file => file.metadata && file.metadata.invoiceNo === invoiceNo);
+            if (serverInvoice) {
+                invoice = serverInvoice.metadata;
+            }
+        } catch (err) {
+            console.error('Error fetching from server:', err);
+        }
+    }
 
-        // Also save to server if not already there (or just to be sure)
-        fetch('/save-invoice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                html: invoice.html,
-                filename: safeFilename
-            })
-        }).then(response => response.json())
-            .then(data => console.log('Server response:', data))
-            .catch(err => console.error('Error saving to server:', err));
+    if (invoice && invoice.html) {
+        const safeFilename = `${invoice.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
 
-        const printContainer = document.getElementById('printContainer');
+        // Ensure printing container exists
+        let printContainer = document.getElementById('printContainer');
+        if (!printContainer) {
+            printContainer = document.createElement('div');
+            printContainer.id = 'printContainer';
+            document.body.appendChild(printContainer);
+        }
+
         printContainer.innerHTML = invoice.html;
 
         const originalTitle = document.title;
@@ -156,11 +161,42 @@ function downloadInvoice(invoiceNo) {
     }
 }
 
-function deleteInvoice(invoiceNo) {
-    if (confirm('Are you sure you want to delete this invoice from history?')) {
+async function deleteInvoice(invoiceNo) {
+    if (confirm('Are you sure you want to delete this invoice?')) {
         let history = JSON.parse(localStorage.getItem('invoice_history') || '[]');
+        const invoice = history.find(inv => inv.invoiceNo === invoiceNo);
+
+        if (invoice) {
+            const filename = `${invoice.invoiceNo.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+
+            // Delete from server
+            try {
+                await fetch(`/api/invoices/${filename}`, { method: 'DELETE' });
+            } catch (err) {
+                console.error('Error deleting from server:', err);
+            }
+        }
+
+        // Delete from local storage
         history = history.filter(inv => inv.invoiceNo !== invoiceNo);
         localStorage.setItem('invoice_history', JSON.stringify(history));
+
+        loadHistory();
+    }
+}
+
+async function deleteAllInvoices() {
+    if (confirm('CAUTION: Are you sure you want to delete ALL invoices? This cannot be undone.')) {
+        // Delete from server
+        try {
+            await fetch('/api/invoices', { method: 'DELETE' });
+        } catch (err) {
+            console.error('Error clearing server history:', err);
+        }
+
+        // Delete from local storage
+        localStorage.removeItem('invoice_history');
+
         loadHistory();
     }
 }
