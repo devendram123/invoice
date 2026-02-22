@@ -154,16 +154,40 @@ body {
     gap: 20px;
 }
 
+.company-logo {
+    width: 120px;
+    height: 120px;
+    border: 3px solid #dc3545;
+    border-radius: 50%;
+    margin-right: 30px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.12);
+}
+
+.company-logo img {
+    width: 95%;
+    /* Small padding for circular alignment */
+    height: 95%;
+    object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.15) brightness(1.05);
+}
+
 .doc-header-main {
     display: flex;
     align-items: center;
-    gap: 15px;
-    flex: 1;
+    flex: 2;
 }
 
 .company-name-main {
     margin: 0;
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     color: #dc3545;
     font-weight: 900;
     letter-spacing: 1px;
@@ -172,7 +196,7 @@ body {
 
 .company-tagline {
     margin: 4px 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: #333;
     text-transform: uppercase;
@@ -180,22 +204,23 @@ body {
 
 .company-business-details {
     margin: 0;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     line-height: 1.3;
-    max-width: 480px;
+    max-width: 500px;
     color: #555;
 }
 
 .doc-header-info {
     text-align: right;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #444;
-    min-width: 200px;
+    min-width: 250px;
+    flex: 1;
 }
 
 .doc-header-info p {
-    margin: 2px 0;
+    margin: 1px 0;
 }
 
 .tax-invoice-label {
@@ -1006,5 +1031,67 @@ body {
     .btn {
         padding: 10px;
         font-size: 14px;
+    }
+}
+
+@media print {
+
+    .nav-bar,
+    .preview-actions,
+    .invoice-form,
+    .btn,
+    .back-btn,
+    .history-header,
+    #historyContent,
+    .no-data {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Show the print container in history page */
+    #printContainer {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    .invoice-preview {
+        display: block !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    .invoice-document {
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    /* Ensure specific styling for the printed page */
+    .invoice-page {
+        margin: 0 !important;
+        padding: 20px !important;
+        box-shadow: none !important;
+        width: 100% !important;
+        min-height: auto !important;
+    }
+
+    /* Prevent page breaks inside the invoice document if possible */
+    .invoice-page {
+        page-break-after: always;
     }
 }

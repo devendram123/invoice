@@ -1,5 +1,5 @@
-// Initialize invoice number
-let invoiceCounter = 1;
+// Initialize invoice number from localStorage or default to 1
+let invoiceCounter = parseInt(localStorage.getItem('invoice_counter')) || 1;
 let items = [];
 let signatureImage = '';
 
@@ -23,7 +23,7 @@ window.onload = function () {
     addItem(); // Add first item by default
 };
 
-// Generate unique invoice number
+// Generate unique invoice number (Current version without incrementing)
 function generateInvoiceNumber() {
     const prefix = 'INV';
     const date = new Date();
@@ -31,7 +31,12 @@ function generateInvoiceNumber() {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const invoiceNo = `${prefix}/${year}/${month}/${String(invoiceCounter).padStart(4, '0')}`;
     document.getElementById('invoiceNo').value = invoiceNo;
+}
+
+// Function to actually increment the counter (Called during save)
+function incrementInvoiceCounter() {
     invoiceCounter++;
+    localStorage.setItem('invoice_counter', invoiceCounter);
 }
 
 // Set today's date
@@ -250,10 +255,10 @@ function generateInvoice() {
         <div class="invoice-header-branding">
             <div class="doc-header">
                 <div class="doc-header-main">
-                    <div class="company-logo" style="width: 80px; height: 80px; border: 2px solid #dc3545;">
-                        <img src="smart_logo.png" style="width: 100%; height: 100%; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: 900; color: #dc3545; flex-direction: column; line-height: 120%;">
-                            <span style="font-size: 24px;">S E</span>
+                    <div class="company-logo">
+                        <img src="smart_logo.png" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: 900; color: #dc3545; flex-direction: column; line-height: 1.1;">
+                            <span style="font-size: 28px;">S E</span>
                         </div>
                     </div>
                     <div class="company-title-area">
@@ -495,6 +500,9 @@ function saveAsPDF() {
 
     // Trigger print dialog
     window.print();
+
+    // Increment and persist counter after successful print/save
+    incrementInvoiceCounter();
 
     // Restore original title after a delay
     setTimeout(() => {

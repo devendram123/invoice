@@ -39,6 +39,13 @@ app.post('/save-invoice', async (req, res) => {
         });
         const page = await browser.newPage();
 
+        // Set viewport to standard desktop size to avoid mobile breakpoints
+        await page.setViewport({ width: 1200, height: 800 });
+
+        // Emulate screen media to match the preview exactly, 
+        // but A4 PDF generation will handle the format
+        await page.emulateMediaType('screen');
+
         // Wrap the invoice HTML in a basic template with the CSS
         const cssContent = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
         const fullHTML = `
@@ -47,26 +54,27 @@ app.post('/save-invoice', async (req, res) => {
             <head>
                 <style>${cssContent}</style>
                 <style>
-                    body { background: white !important; padding: 0 !important; }
-                    .invoice-page { box-shadow: none !important; margin: 0 !important; }
+                    body { background: white !important; padding: 0 !important; margin: 0 !important; }
+                    .invoice-document { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; }
                 </style>
             </head>
             <body>
-                <div class="invoice-document">
-                    ${html}
-                </div>
+                ${html}
             </body>
             </html>
         `;
 
-        await page.setContent(fullHTML, { waitUntil: 'networkidle0' });
+        await page.setContent(fullHTML, {
+            waitUntil: 'networkidle0',
+            url: `file://${path.join(__dirname, 'index.html')}` // Provides context for relative assets
+        });
 
         const filePath = path.join(INVOICE_DIR, filename);
         await page.pdf({
             path: filePath,
             format: 'A4',
             printBackground: true,
-            margin: { top: '20px', right: '20px', bottom: '20px', left: '20px' }
+            margin: { top: '0', right: '0', bottom: '0', left: '0' }
         });
 
         await browser.close();

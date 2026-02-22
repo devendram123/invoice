@@ -11,7 +11,7 @@ const INVENTORY_LIST = [
     { code: "RM110204", description: "End Beam Tube 40x40x621x3mm" },
     { code: "RM110205", description: "End Beam Tube 40x40x621x3mm" },
     { code: "RM110909", description: "End Beam Tube 40x40x516x3mm" },
-    { code: "RM111270", description: "Whole Upper Sleeper" },
+    { code: "RM111270", description: "End Beam Tube 60x530x8" },
     { code: "RM110900", description: "Beam 50x30x646" },
     { code: "RM110897", description: "Beam 60x8x530" },
     { code: "RM110901", description: "Beam 30x30x530" },
