@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <nav class="nav-bar">
         <div class="nav-logo">Invoice Pro</div>
@@ -18,7 +20,7 @@
         <!-- Invoice Form Section -->
         <div class="invoice-form" id="invoiceForm">
             <h2>Create New Invoice</h2>
-            
+
             <!-- Company Details -->
             <div class="section">
                 <h3>Company Details</h3>
@@ -29,11 +31,13 @@
                     </div>
                     <div class="form-group">
                         <label>Business Type:</label>
-                        <input type="text" id="companyBusiness" value="INSTRUMENTATION, HYDRAULIC & PNEUMATIC - TUBE FITTINGS, VALVE, MANIFOLD, & QRC IN S.S., M.S. & BRASS (MAKERS)">
+                        <input type="text" id="companyBusiness"
+                            value="INSTRUMENTATION, HYDRAULIC & PNEUMATIC - TUBE FITTINGS, VALVE, MANIFOLD, & QRC IN S.S., M.S. & BRASS (MAKERS)">
                     </div>
                     <div class="form-group">
                         <label>Company Address:</label>
-                        <textarea id="companyAddress" rows="3">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400708</textarea>
+                        <textarea id="companyAddress"
+                            rows="3">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400708</textarea>
                     </div>
                     <div class="form-group">
                         <label>Mobile:</label>
@@ -135,22 +139,24 @@
                 <div class="items-header">
                     <button class="btn btn-add" onclick="addItem()">+ Add Item</button>
                 </div>
-                <table class="items-table" id="itemsTable">
-                    <thead>
-                        <tr>
-                            <th>Sl</th>
-                            <th>Description</th>
-                            <th>HSN/SAC</th>
-                            <th>Quantity</th>
-                            <th>Rate</th>
-                            <th>Amount</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id="itemsBody">
-                        <!-- Items will be added dynamically -->
-                    </tbody>
-                </table>
+                <div class="items-table-wrapper">
+                    <table class="items-table" id="itemsTable">
+                        <thead>
+                            <tr>
+                                <th>Sl</th>
+                                <th>Description</th>
+                                <th>HSN/SAC</th>
+                                <th>Quantity</th>
+                                <th>Rate</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsBody">
+                            <!-- Items will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             <!-- Tax Configuration -->
@@ -186,7 +192,7 @@
                 <button class="btn btn-secondary" onclick="editInvoice()">Edit</button>
                 <button class="btn btn-success" onclick="saveAsPDF()">Save as PDF</button>
             </div>
-            
+
             <div class="invoice-document" id="invoiceDocument">
                 <!-- Invoice will be generated here -->
             </div>
@@ -195,4 +201,5 @@
 
     <script src="script.js"></script>
 </body>
+
 </html>

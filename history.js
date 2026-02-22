@@ -83,11 +83,11 @@ async function loadHistory() {
                         <tbody>
                             ${groups[monthYear].map(inv => `
                                 <tr>
-                                    <td style="font-weight: 600;">${inv.invoiceNo}</td>
-                                    <td>${new Date(inv.invoiceDate).toLocaleDateString('en-IN')}</td>
-                                    <td>${inv.buyerName}</td>
-                                    <td style="font-weight: 600;">${inv.amount !== 'N/A' ? '₹ ' + inv.amount : 'N/A'}</td>
-                                    <td>
+                                    <td data-label="Invoice No" style="font-weight: 600;">${inv.invoiceNo}</td>
+                                    <td data-label="Date">${new Date(inv.invoiceDate).toLocaleDateString('en-IN')}</td>
+                                    <td data-label="Buyer Name">${inv.buyerName}</td>
+                                    <td data-label="Amount" style="font-weight: 600;">${inv.amount !== 'N/A' ? '₹ ' + inv.amount : 'N/A'}</td>
+                                    <td data-label="Actions">
                                         <a href="${inv.url}" target="_blank" class="btn btn-primary btn-sm" style="text-decoration: none; display: inline-block;">View PDF</a>
                                         <button class="btn btn-primary btn-sm" onclick="downloadInvoice('${inv.invoiceNo}')">Print Window</button>
                                         <button class="btn btn-danger btn-sm" onclick="deleteInvoice('${inv.invoiceNo}')">Delete</button>
