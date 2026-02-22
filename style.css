@@ -901,6 +901,44 @@ body {
         font-size: 10px;
     }
 
+    /* Items Table Form Responsiveness */
+    .items-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 15px 0;
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        position: relative;
+    }
+
+    /* Add a subtle visual hint for scrollability */
+    .items-table-wrapper::after {
+        content: '↔ Scroll to view all columns';
+        display: block;
+        text-align: center;
+        font-size: 10px;
+        color: #999;
+        padding: 5px;
+        background: #fdfdfd;
+        border-top: 1px solid #eee;
+    }
+
+    .items-table {
+        min-width: 700px;
+        /* Minimum width to prevent squishing */
+    }
+
+    .items-table th,
+    .items-table td {
+        padding: 8px 5px;
+    }
+
+    .items-table input {
+        padding: 6px;
+        font-size: 13px;
+    }
+
     .totals-table {
         width: 100% !important;
         float: none !important;
