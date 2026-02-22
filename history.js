@@ -15,7 +15,6 @@ async function loadHistory() {
         const history = JSON.parse(localStorage.getItem('invoice_history') || '[]');
 
         if (diskInvoices.length === 0 && history.length === 0) {
-            container.innerHTML = ''; // Clear container
             noData.style.display = 'block';
             return;
         }
