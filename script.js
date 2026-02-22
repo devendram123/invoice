@@ -245,33 +245,32 @@ function generateInvoice() {
         year: 'numeric'
     });
 
-    // Generate invoice HTML
     const invoiceHTML = `
         <div class="invoice-page">
-        <div class="invoice-header" style="background: white; color: #2c3e50; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">
-            <div style="display: flex; align-items: start; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 15px;">
+        <div class="invoice-header-branding">
+            <div class="doc-header">
+                <div class="doc-header-main">
                     <div class="company-logo" style="width: 80px; height: 80px; border: 2px solid #dc3545;">
                         <img src="smart_logo.png" style="width: 100%; height: 100%; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: 900; color: #dc3545; flex-direction: column; line-height: 1;">
+                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: 900; color: #dc3545; flex-direction: column; line-height: 120%;">
                             <span style="font-size: 24px;">S E</span>
                         </div>
                     </div>
-                    <div>
-                        <h1 style="margin: 0; font-size: 2.2em; color: #dc3545; font-weight: 900; letter-spacing: 2px;">${companyName}</h1>
-                        <p style="margin: 2px 0; font-size: 0.9em; font-weight: 700; color: #333;">MANUFACTURING & SUPPLIERS</p>
-                        <p style="margin: 0; font-size: 0.65em; font-weight: 600; line-height: 1.2; max-width: 450px;">${companyBusiness}</p>
+                    <div class="company-title-area">
+                        <h1 class="company-name-main">${companyName}</h1>
+                        <p class="company-tagline">MANUFACTURING & SUPPLIERS</p>
+                        <p class="company-business-details">${companyBusiness}</p>
                     </div>
                 </div>
-                <div style="text-align: right; font-size: 0.75em;">
-                    <p style="margin: 2px 0;">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400 708.</p>
-                    <p style="margin: 2px 0;">Mob.: ${companyMobile}</p>
-                    <p style="margin: 2px 0;">E-mail : ${companyEmail}</p>
-                    <p style="margin: 2px 0; font-weight: 700;">GSTIN : ${companyGSTIN}</p>
+                <div class="doc-header-info">
+                    <p>${companyAddress.replace(/\n/g, ', ')}</p>
+                    <p>Mob.: ${companyMobile}</p>
+                    <p>E-mail : ${companyEmail}</p>
+                    <p><strong>GSTIN : ${companyGSTIN}</strong></p>
                 </div>
             </div>
-            <div style="text-align: center; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-top: 10px; padding: 4px 0;">
-                <h3 style="margin: 0; letter-spacing: 4px; font-weight: 900; font-size: 1.1em;">TAX INVOICE</h3>
+            <div class="tax-invoice-label">
+                <h3>TAX INVOICE</h3>
             </div>
         </div>
         

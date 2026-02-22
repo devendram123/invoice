@@ -138,6 +138,82 @@ body {
     font-weight: 700;
 }
 
+/* Invoice Print Branding Styles */
+.invoice-header-branding {
+    background: white;
+    color: #2c3e50;
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.doc-header-main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+}
+
+.company-name-main {
+    margin: 0;
+    font-size: 2.2rem;
+    color: #dc3545;
+    font-weight: 900;
+    letter-spacing: 1px;
+    line-height: 1.1;
+}
+
+.company-tagline {
+    margin: 4px 0;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #333;
+    text-transform: uppercase;
+}
+
+.company-business-details {
+    margin: 0;
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.3;
+    max-width: 480px;
+    color: #555;
+}
+
+.doc-header-info {
+    text-align: right;
+    font-size: 0.8rem;
+    color: #444;
+    min-width: 200px;
+}
+
+.doc-header-info p {
+    margin: 2px 0;
+}
+
+.tax-invoice-label {
+    text-align: center;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+    margin-top: 10px;
+    padding: 6px 0;
+}
+
+.tax-invoice-label h3 {
+    margin: 0;
+    letter-spacing: 6px;
+    font-weight: 900;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
 /* History Page Styles */
 .history-header {
     display: flex;
@@ -707,25 +783,67 @@ body {
 
 @media (max-width: 768px) {
     .nav-bar {
-        padding: 0.8rem 1rem;
-        flex-direction: row;
-        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
     }
 
     .nav-logo {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
     }
 
     .nav-links {
         display: flex;
-        width: auto;
+        width: 100%;
+        justify-content: center;
         gap: 15px;
     }
 
     .nav-links a {
         margin-left: 0;
         font-size: 13px;
-        position: relative;
+    }
+
+    /* Invoice Branding Mobile Fix */
+    .doc-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .doc-header-main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .company-name-main {
+        font-size: 1.6rem;
+        margin-top: 10px;
+    }
+
+    .company-tagline {
+        font-size: 0.85rem;
+    }
+
+    .company-business-details {
+        font-size: 0.65rem;
+        max-width: 100%;
+    }
+
+    .doc-header-info {
+        text-align: center;
+        width: 100%;
+        min-width: unset;
+        font-size: 0.75rem;
+        border-top: 1px dashed #eee;
+        padding-top: 10px;
+    }
+
+    .tax-invoice-label h3 {
+        font-size: 1rem;
+        letter-spacing: 3px;
     }
 
     .history-header {
@@ -733,36 +851,17 @@ body {
         align-items: stretch;
         gap: 15px;
         background: white;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    }
-
-    .search-box {
-        width: 100%;
+        padding: 15px;
+        border-radius: 8px;
     }
 
     .search-box input {
         width: 100%;
-        padding: 12px 15px;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        background: #fdfdfd;
     }
 
     .form-grid {
         grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .section {
-        margin-bottom: 20px;
-        padding: 15px;
-    }
-
-    .invoice-info-grid {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        gap: 15px;
     }
 
     .action-buttons,
@@ -774,14 +873,40 @@ body {
 
     .btn {
         width: 100%;
-        padding: 14px;
-        font-size: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        padding: 12px;
+        font-size: 15px;
     }
 
-    /* Premium Card Layout for History */
+    /* Invoice SCALE for mobile preview */
+    .invoice-preview {
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .invoice-document {
+        width: 100%;
+        min-width: 100%;
+        padding: 10px;
+        font-size: 11px;
+        /* Global scale down for content */
+        box-shadow: none;
+    }
+
+    .info-box {
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .invoice-items table {
+        font-size: 10px;
+    }
+
+    .totals-table {
+        width: 100% !important;
+        float: none !important;
+    }
+
+    /* History Table to Card Layout */
     .history-table thead {
         display: none;
     }
@@ -795,98 +920,53 @@ body {
     }
 
     .history-table tr {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
         border: none;
-        border-radius: 12px;
-        padding: 15px;
+        border-radius: 10px;
+        padding: 12px;
         background: white;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         position: relative;
-        overflow: hidden;
-    }
-
-    .history-table tr::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: var(--accent-color);
     }
 
     .history-table td {
         text-align: right;
-        padding: 10px 0;
-        border: none;
-        border-bottom: 1px solid #f9f9f9;
+        padding: 8px 0;
+        border-bottom: 1px solid #f5f5f5;
         position: relative;
-        padding-left: 45%;
-        font-size: 14px;
+        padding-left: 40%;
     }
 
     .history-table td:last-child {
         border-bottom: none;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
         padding-left: 0;
-        gap: 8px;
+        display: flex;
+        justify-content: space-between;
         margin-top: 10px;
-    }
-
-    .history-table td:last-child .btn {
-        padding: 10px;
-        font-size: 13px;
+        gap: 5px;
     }
 
     .history-table td::before {
         content: attr(data-label);
         position: absolute;
         left: 0;
-        width: 40%;
-        text-align: left;
-        font-weight: 600;
-        color: #888;
-        font-size: 12px;
-        text-transform: uppercase;
-    }
-
-    /* Items Table Mobile Handling with Glassmorphism shadow */
-    .items-table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 12px;
-        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.02);
-        padding: 5px;
-        background: #fff;
-    }
-
-    .items-table {
-        min-width: 800px;
-        /* Ensure columns don't squish too much */
+        font-weight: bold;
+        color: #666;
+        font-size: 11px;
     }
 }
 
 @media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.4em;
-        letter-spacing: 1px;
-    }
-
-    .section h3 {
-        font-size: 1.1em;
+    .company-name-main {
+        font-size: 1.4rem;
     }
 
     .invoice-page {
-        padding: 8px;
+        padding: 10px;
     }
 
-    .company-logo {
-        width: 35px;
-        height: 35px;
-    }
-
-    .invoice-header h2 {
-        font-size: 1em;
+    .btn {
+        padding: 10px;
+        font-size: 14px;
     }
 }
