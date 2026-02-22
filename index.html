@@ -9,6 +9,9 @@
 </head>
 
 <body>
+    <!-- Datalist for inventory items -->
+    <datalist id="inventoryData"></datalist>
+
     <nav class="nav-bar">
         <div class="nav-logo">Invoice Pro</div>
         <div class="nav-links">
@@ -27,29 +30,29 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Company Name:</label>
-                        <input type="text" id="companyName" value="SMART MANUFACTURING">
+                        <input type="text" id="companyName" value="SMART ENGINEERING">
                     </div>
                     <div class="form-group">
                         <label>Business Type:</label>
                         <input type="text" id="companyBusiness"
-                            value="INSTRUMENTATION, HYDRAULIC & PNEUMATIC - TUBE FITTINGS, VALVE, MANIFOLD, & QRC IN S.S., M.S. & BRASS (MAKERS)">
+                            value="MANUFACTURING & SUPPLIERS, INSTRUMENTATION, HYDRAULIC & PNEUMATIC - TUBE FITTINGS, VALVE, MANIFOLD, & QRC IN S.S., M.S. & BRASS (MAKERS)">
                     </div>
                     <div class="form-group">
                         <label>Company Address:</label>
                         <textarea id="companyAddress"
-                            rows="3">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400708</textarea>
+                            rows="3">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400 708</textarea>
                     </div>
                     <div class="form-group">
                         <label>Mobile:</label>
-                        <input type="text" id="companyMobile" value="7506828465">
+                        <input type="text" id="companyMobile" value="9324040359 / 9326576679">
                     </div>
                     <div class="form-group">
                         <label>Email:</label>
-                        <input type="email" id="companyEmail" value="smartmanufacturing86@gmail.com">
+                        <input type="email" id="companyEmail" value="smartmaker9@gmail.com">
                     </div>
                     <div class="form-group">
                         <label>GSTIN/UIN:</label>
-                        <input type="text" id="companyGSTIN" value="27FRIPM0678C1ZN">
+                        <input type="text" id="companyGSTIN" value="27CGMPM8454N1ZG">
                     </div>
                     <div class="form-group">
                         <label>State & Code:</label>
@@ -65,11 +68,11 @@
                     </div>
                     <div class="form-group">
                         <label>Branch Name:</label>
-                        <input type="text" id="branchName" value="Mulund" readonly>
+                        <input type="text" id="branchName" value="Mulund (E), Mumbai - 400 081." readonly>
                     </div>
                     <div class="form-group">
                         <label>Account No:</label>
-                        <input type="text" id="accountNo" value="106120100000307" readonly>
+                        <input type="text" id="accountNo" value="106120100000102" readonly>
                     </div>
                     <div class="form-group">
                         <label>IFSC Code:</label>
@@ -199,6 +202,7 @@
         </div>
     </div>
 
+    <script src="list.js"></script>
     <script src="script.js"></script>
 </body>
 

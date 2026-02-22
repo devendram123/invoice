@@ -40,6 +40,33 @@ function setTodayDate() {
     document.getElementById('invoiceDate').value = today;
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    populateInventoryDatalist();
+});
+
+// Populate the datalist from INVENTORY_LIST
+function populateInventoryDatalist() {
+    const datalist = document.getElementById('inventoryData');
+    if (!datalist) return;
+
+    INVENTORY_LIST.forEach(item => {
+        // Option with Full String for matching
+        const option = document.createElement('option');
+        option.value = `${item.code} - ${item.description}`;
+        datalist.appendChild(option);
+
+        // Separate option for just code if needed for quick search
+        const optionCode = document.createElement('option');
+        optionCode.value = item.code;
+        datalist.appendChild(optionCode);
+
+        // Separate option for just description
+        const optionDesc = document.createElement('option');
+        optionDesc.value = item.description;
+        datalist.appendChild(optionDesc);
+    });
+}
+
 // Add new item row
 function addItem() {
     const itemsBody = document.getElementById('itemsBody');
@@ -49,19 +76,7 @@ function addItem() {
     row.innerHTML = `
         <td>${rowCount}</td>
         <td>
-            <select class="item-desc">
-                <option value="">Select item</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Desktop Computer">Desktop Computer</option>
-                <option value="Monitor">Monitor</option>
-                <option value="Keyboard">Keyboard</option>
-                <option value="Mouse">Mouse</option>
-                <option value="Headphones">Headphones</option>
-                <option value="Webcam">Webcam</option>
-                <option value="Printer">Printer</option>
-                <option value="Scanner">Scanner</option>
-                <option value="Router">Router</option>
-            </select>
+            <input type="text" class="item-desc" list="inventoryData" placeholder="Search code or name..." oninput="handleItemSelection(this)">
         </td>
         <td><input type="text" class="item-hsn" placeholder="HSN/SAC"></td>
         <td><input type="number" class="item-qty" value="1" min="1" onchange="calculateItemAmount(this)"></td>
@@ -211,11 +226,11 @@ function generateInvoice() {
         itemsHTML += `
             <tr>
                 <td>${i + 1}</td>
-                <td>${desc}</td>
+                <td style="text-align: left;">${desc}</td>
                 <td>${hsn}</td>
                 <td>${qty}</td>
-                <td class="amount">₹ ${rate}</td>
-                <td class="amount">₹ ${amount}</td>
+                <td class="amount">${rate}</td>
+                <td class="amount">${amount}</td>
             </tr>
         `;
     }
@@ -233,68 +248,58 @@ function generateInvoice() {
     // Generate invoice HTML
     const invoiceHTML = `
         <div class="invoice-page">
-        <div class="invoice-header">
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="company-logo">
-                        <div style="text-align: center;">
-                            <div class="logo-om">ॐ</div>
-                            <div class="logo-sm">SM</div>
+        <div class="invoice-header" style="background: white; color: #2c3e50; border-bottom: 2px solid #dc3545; padding-bottom: 10px;">
+            <div style="display: flex; align-items: start; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div class="company-logo" style="width: 80px; height: 80px; border: 2px solid #dc3545;">
+                        <img src="smart_logo.png" style="width: 100%; height: 100%; border-radius: 50%;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; font-weight: 900; color: #dc3545; flex-direction: column; line-height: 1;">
+                            <span style="font-size: 24px;">S E</span>
                         </div>
                     </div>
                     <div>
-                        <h2 style="margin: 0; font-size: 1.3em; letter-spacing: 1px; font-weight: 900;">${companyName}</h2>
-                        <p style="margin: 3px 0 0 0; font-size: 0.65em; opacity: 0.95; font-weight: 500; line-height: 1.1;">${companyBusiness}</p>
+                        <h1 style="margin: 0; font-size: 2.2em; color: #dc3545; font-weight: 900; letter-spacing: 2px;">${companyName}</h1>
+                        <p style="margin: 2px 0; font-size: 0.9em; font-weight: 700; color: #333;">MANUFACTURING & SUPPLIERS</p>
+                        <p style="margin: 0; font-size: 0.65em; font-weight: 600; line-height: 1.2; max-width: 450px;">${companyBusiness}</p>
                     </div>
                 </div>
-                <div style="text-align: right;">
-                    <h3 style="margin: 0; font-size: 1.3em; letter-spacing: 1px;">TAX INVOICE</h3>
-                    <p style="margin: 2px 0 0 0; font-size: 0.75em;">Date: ${formattedDate}</p>
+                <div style="text-align: right; font-size: 0.75em;">
+                    <p style="margin: 2px 0;">411, Subhash Nagar, M.I.D.C. Road, Airoli, Navi Mumbai - 400 708.</p>
+                    <p style="margin: 2px 0;">Mob.: ${companyMobile}</p>
+                    <p style="margin: 2px 0;">E-mail : ${companyEmail}</p>
+                    <p style="margin: 2px 0; font-weight: 700;">GSTIN : ${companyGSTIN}</p>
                 </div>
             </div>
-            <div style="margin-top: 6px; padding-top: 6px; border-top: 2px solid rgba(255,255,255,0.3); display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; font-size: 0.7em;">
-                <div><strong>📍</strong> ${companyAddress.replace(/\n/g, ', ')}</div>
-                <div><strong>📞</strong> ${companyMobile} | <strong>✉</strong> ${companyEmail}</div>
-                <div style="text-align: right;"><strong>GST:</strong> ${companyGSTIN}</div>
+            <div style="text-align: center; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; margin-top: 10px; padding: 4px 0;">
+                <h3 style="margin: 0; letter-spacing: 4px; font-weight: 900; font-size: 1.1em;">TAX INVOICE</h3>
             </div>
         </div>
         
-        <div class="invoice-info-grid">
+        <div class="invoice-info-grid" style="margin-top: 10px;">
             <div class="info-box">
-                <h4>Invoice Details</h4>
-                <p><strong>Invoice No:</strong> ${invoiceNo}</p>
-                <p><strong>Date:</strong> ${formattedDate}</p>
-                ${referenceNo ? `<p><strong>Reference No:</strong> ${referenceNo}</p>` : ''}
-                ${deliveryNote ? `<p><strong>Delivery Note:</strong> ${deliveryNote}</p>` : ''}
+                <p><strong>M/s.</strong> ${buyerName}</p>
+                <p>${buyerAddress.replace(/\n/g, '<br>')}</p>
+                <p><strong>GSTIN:</strong> ${buyerGSTIN}</p>
+                <p><strong>State:</strong> ${buyerState}</p>
             </div>
-            
             <div class="info-box">
-                <h4>Company Details</h4>
-                <p><strong>${companyName}</strong></p>
-                <p>${companyAddress.replace(/\n/g, '<br>')}</p>
-                <p><strong>GSTIN/UIN:</strong> ${companyGSTIN}</p>
-                <p><strong>State:</strong> ${companyState}</p>
+                <p><strong>Invoice No.:</strong> ${invoiceNo}</p>
+                <p><strong>Invoice Date:</strong> ${formattedDate}</p>
+                <p><strong>Challan No.:</strong> ${challanNumber}</p>
+                ${referenceNo ? `<p><strong>P.O. Date:</strong> ${referenceNo}</p>` : ''}
             </div>
         </div>
         
-        <div class="info-box">
-            <h4>Buyer Details (Bill To)</h4>
-            <p><strong>${buyerName}</strong></p>
-            <p>${buyerAddress.replace(/\n/g, '<br>')}</p>
-            <p><strong>GSTIN/UIN:</strong> ${buyerGSTIN}</p>
-            <p><strong>State:</strong> ${buyerState}</p>
-        </div>
-        
-        <div class="invoice-items">
+        <div class="invoice-items" style="margin-top: 15px;">
             <table>
                 <thead>
                     <tr>
-                        <th>Sl</th>
-                        <th>Description of Goods</th>
-                        <th>HSN/SAC</th>
-                        <th>Quantity</th>
-                        <th>Rate</th>
-                        <th>Amount</th>
+                        <th style="width: 40px;">Sr. No.</th>
+                        <th>Product Description</th>
+                        <th style="width: 80px;">HSN CODE</th>
+                        <th style="width: 70px;">QUANTITY</th>
+                        <th style="width: 100px;">RATE Rs.</th>
+                        <th style="width: 120px;">TOTAL AMOUNT Rs.</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -303,60 +308,67 @@ function generateInvoice() {
             </table>
         </div>
         
-        <div class="invoice-totals">
-            <div class="totals-table">
-                <table>
-                    <tr>
-                        <td class="label">Subtotal</td>
-                        <td class="amount">₹ ${subtotal.toFixed(2)}</td>
-                    </tr>
-                    ${cgstRate > 0 ? `
-                    <tr>
-                        <td class="label">CGST (${cgstRate}%)</td>
-                        <td class="amount">₹ ${cgstAmount.toFixed(2)}</td>
-                    </tr>
-                    ` : ''}
-                    ${sgstRate > 0 ? `
-                    <tr>
-                        <td class="label">SGST (${sgstRate}%)</td>
-                        <td class="amount">₹ ${sgstAmount.toFixed(2)}</td>
-                    </tr>
-                    ` : ''}
-                    ${igstRate > 0 ? `
-                    <tr>
-                        <td class="label">IGST (${igstRate}%)</td>
-                        <td class="amount">₹ ${igstAmount.toFixed(2)}</td>
-                    </tr>
-                    ` : ''}
-                    <tr class="total-row">
-                        <td class="label">Total Amount</td>
-                        <td class="amount">₹ ${grandTotal.toFixed(2)}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        
-        <div class="invoice-footer">
-            <div class="amount-in-words">
-                <strong>Amount in Words:</strong> ${amountInWords}
-            </div>
-            
-            <div style="border: 2px solid #dc3545; padding: 6px 8px; margin: 8px 0; background: #fff5f5;">
-                <h4 style="color: #dc3545; margin: 0 0 5px 0; font-size: 0.85em;">Bank Details</h4>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; font-size: 0.75em;">
-                    <p style="margin: 2px 0;"><strong>BANK:</strong> ${bankName}</p>
-                    <p style="margin: 2px 0;"><strong>BRANCH:</strong> ${branchName}</p>
-                    <p style="margin: 2px 0;"><strong>A/C NO:</strong> ${accountNo}</p>
-                    <p style="margin: 2px 0;"><strong>IFSC:</strong> ${ifscCode}</p>
+        <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 10px; margin-top: 15px;">
+            <div>
+                <p style="font-size: 0.75em; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Payment within................Days.</p>
+                <div style="margin-top: 10px;">
+                    <p style="font-size: 0.8em; margin-bottom: 5px;"><strong>Rs. in words:</strong> ${amountInWords}</p>
+                </div>
+                <div style="margin-top: 15px; border: 1px solid #ddd; padding: 10px; border-radius: 5px; font-size: 0.75em;">
+                    <h4 style="margin: 0 0 5px 0; color: #dc3545; border-bottom: 1px solid #eee;">Bank Details</h4>
+                    <p><strong>BANK :</strong> ${bankName}</p>
+                    <p><strong>BRANCH :</strong> ${branchName}</p>
+                    <p><strong>Current A/c No.:</strong> ${accountNo}</p>
+                    <p><strong>IFSC CODE:</strong> ${ifscCode}</p>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.65em; line-height: 1.4;">
+                    <strong style="text-decoration: underline; color: #dc3545;">Term & Conditions :</strong><br>
+                    1) Responsibility ceases on delivery of goods at registration of.........in Mumbai.<br>
+                    2) Interest @24% p.a. Added monthly to accounts unpaid on month after delivery.<br>
+                    3) Goods once sold will not be taken back.<br>
+                    4) GST tax will be charged extra if applicable.<br>
+                    5) All rate are extra.<br>
+                    6) Subject to Mumbai Jurisdiction.
                 </div>
             </div>
             
-            <div class="signature-section">
-                <p style="font-size: 0.85em;"><strong>For ${companyName}</strong></p>
-                ${signatureImage ? `<img src="${signatureImage}" alt="Signature" style="max-width: 150px; height: auto; margin: 12px 0;">` : '<div style="height: 40px; margin: 12px 0;"></div>'}
-                <div class="signature-line">${signatoryName || 'Authorized Signatory'}</div>
+            <div class="totals-table">
+                <table>
+                    <tr>
+                        <td class="label">Total Amount before Tax</td>
+                        <td class="amount">₹ ${subtotal.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">SGST ${sgstRate}%</td>
+                        <td class="amount">₹ ${sgstAmount.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td class="label">CGST ${cgstRate}%</td>
+                        <td class="amount">₹ ${cgstAmount.toFixed(2)}</td>
+                    </tr>
+                    ${igstRate > 0 ? `
+                    <tr>
+                        <td class="label">IGST ${igstRate}%</td>
+                        <td class="amount">₹ ${igstAmount.toFixed(2)}</td>
+                    </tr>
+                    ` : ''}
+                    <tr class="total-row" style="background: #dc3545; color: white;">
+                        <td class="label">Total Amount After Tax</td>
+                        <td class="amount">₹ ${grandTotal.toFixed(2)}</td>
+                    </tr>
+                </table>
+                
+                <div style="margin-top: 30px; text-align: center; border-top: 1px solid #ddd; padding-top: 40px; position: relative;">
+                    ${signatureImage ? `<img src="${signatureImage}" style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); max-width: 120px;">` : ''}
+                    <p style="font-size: 0.7em; font-weight: bold;">Certified that the particulars given above are true and correct.</p>
+                    <p style="margin-top: 5px; font-weight: 900; font-size: 0.85em;">For ${companyName}</p>
+                    <div style="margin-top: 30px; font-size: 0.75em; border-top: 1px dashed #333; display: inline-block; padding-top: 5px; min-width: 150px;">
+                        ${signatoryName || 'Authorized Signatory'}
+                    </div>
+                </div>
             </div>
-        </div>        </div>    `;
+        </div>
+    `;
 
     // Display invoice preview
     document.getElementById('invoiceDocument').innerHTML = invoiceHTML;
@@ -499,10 +511,25 @@ function saveInvoiceToHistory(invoiceData) {
         history[index] = invoiceData;
     } else {
         history.push(invoiceData);
+        localStorage.setItem('invoice_history', JSON.stringify(history));
+        loadHistory();
     }
-    localStorage.setItem('invoice_history', JSON.stringify(history));
 }
 
+// Handle auto-formatting when an item is selected from datalist
+function handleItemSelection(input) {
+    const val = input.value;
+    const items = INVENTORY_LIST.filter(item =>
+        item.code === val ||
+        item.description === val ||
+        `${item.code} - ${item.description}` === val
+    );
+
+    if (items.length > 0) {
+        // Auto-format to "Code - Description" for clarity
+        input.value = `${items[0].code} - ${items[0].description}`;
+    }
+}
 // Reset form
 function resetForm() {
     if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
