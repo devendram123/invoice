@@ -187,7 +187,6 @@ function generateInvoice() {
     const companyEmail = document.getElementById('companyEmail').value;
     const companyGSTIN = document.getElementById('companyGSTIN').value;
     const companyState = document.getElementById('companyState').value;
-    const challanNumber = document.getElementById('challanNumber').value;
     const bankName = document.getElementById('bankName').value;
     const branchName = document.getElementById('branchName').value;
     const accountNo = document.getElementById('accountNo').value;
@@ -289,7 +288,6 @@ function generateInvoice() {
             <div class="info-box">
                 <p><strong>Invoice No.:</strong> ${invoiceNo}</p>
                 <p><strong>Invoice Date:</strong> ${formattedDate}</p>
-                <p><strong>Challan No.:</strong> ${challanNumber}</p>
                 ${referenceNo ? `<p><strong>P.O. Date:</strong> ${referenceNo}</p>` : ''}
             </div>
         </div>
@@ -356,7 +354,7 @@ function generateInvoice() {
                         <td class="amount">₹ ${igstAmount.toFixed(2)}</td>
                     </tr>
                     ` : ''}
-                    <tr class="total-row" style="background: #dc3545; color: white;">
+                    <tr class="total-row">
                         <td class="label">Total Amount After Tax</td>
                         <td class="amount">₹ ${grandTotal.toFixed(2)}</td>
                     </tr>
