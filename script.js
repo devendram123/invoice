@@ -20,7 +20,7 @@ function loadSignature(input) {
 window.onload = function () {
     generateInvoiceNumber();
     setTodayDate();
-    addItem(); // Add first item by default
+    addDefaultItems(); // Add default items instead of one empty item
 };
 
 // Generate unique invoice number (Current version without incrementing)
@@ -70,6 +70,77 @@ function populateInventoryDatalist() {
         optionDesc.value = item.description;
         datalist.appendChild(optionDesc);
     });
+}
+
+// Add new default item rows
+function addDefaultItems() {
+    const defaultItems = [
+        { desc: "RM108585 - Oil Cup", hsn: "7218", qty: 60, rate: 1450.00 },
+        { desc: "RM104637 - Ending Plug 1 1/4", hsn: "7218", qty: 30, rate: 93.00 },
+        { desc: "RM107821 - MS Blind Flange 148x4 THK", hsn: "7218", qty: 120, rate: 75.00 },
+        { desc: "RM105864 - HT Cover Thickness 2mm", hsn: "7218", qty: 30, rate: 175.00 },
+        { desc: "RM101166 - Base Plate", hsn: "7218", qty: 240, rate: 68.00 },
+        { desc: "RM106828 - Locking Tab", hsn: "7218", qty: 240, rate: 19.00 },
+        { desc: "RM106293 - Jacking Plate", hsn: "7218", qty: 240, rate: 88.00 },
+        { desc: "RM110908 - End Beam Tube 40x40x516x3mm", hsn: "7218", qty: 90, rate: 937.00 },
+        { desc: "RM110910 - End Beam Tube 40x40x154x3mm", hsn: "7218", qty: 240, rate: 250.00 },
+        { desc: "RM110204 - End Beam Tube 40x40x621x3mm", hsn: "7218", qty: 30, rate: 1180.00 },
+        { desc: "RM110205 - End Beam Tube 40x40x621x3mm", hsn: "7218", qty: 30, rate: 1180.00 },
+        { desc: "RM110909 - End Beam Tube 40x40x516x3mm", hsn: "7218", qty: 30, rate: 980.00 },
+        { desc: "RM111270 - End Beam Tube 60x530x8", hsn: "7218", qty: 30, rate: 880.00 },
+        { desc: "RM110900 - Beam 50x30x646", hsn: "7218", qty: 60, rate: 1110.00 },
+        { desc: "RM110897 - Beam 60x8x530", hsn: "7218", qty: 120, rate: 780.00 },
+        { desc: "RM110901 - Beam 30x30x530", hsn: "7218", qty: 120, rate: 1670.00 },
+        { desc: "RM110902 - Beam 25x25x545", hsn: "7218", qty: 60, rate: 1150.00 },
+        { desc: "RM110898 - Beam 60x8x530", hsn: "7218", qty: 30, rate: 850.00 },
+        { desc: "RM110899 - Beam 50x33x646", hsn: "7218", qty: 60, rate: 2400.00 },
+        { desc: "RM111469 - Stud M10x282 Full Thread", hsn: "7218", qty: 480, rate: 69.00 },
+        { desc: "RM111470 - Stud M8x535 mm", hsn: "7218", qty: 60, rate: 110.00 },
+        { desc: "RM110918 - Tie Rod M10x180 mm", hsn: "7218", qty: 60, rate: 59.00 },
+        { desc: "RM110940 - Stud M16x438 mm", hsn: "7218", qty: 120, rate: 196.00 },
+        { desc: "RM111378 - Tie Rod M16x160 mm", hsn: "7218", qty: 120, rate: 119.00 },
+        { desc: "RM101544 - Bush M12", hsn: "7218", qty: 1440, rate: 45.00 },
+        { desc: "RM111377 - Tie Rod M16x827", hsn: "7218", qty: 60, rate: 267.00 },
+        { desc: "RM111388 - Tie Rod M16x700 mm", hsn: "7218", qty: 30, rate: 247.00 },
+        { desc: "RM111392 - Tie Rod M16x410", hsn: "7218", qty: 30, rate: 250.00 },
+        { desc: "RM111379 - Tie Rod M20x570", hsn: "7218", qty: 120, rate: 410.00 },
+        { desc: "RM111380 - Tie Rod M30x1772", hsn: "7218", qty: 180, rate: 1950.00 },
+        { desc: "RM112269 - Whole Lower Sleeper", hsn: "7218", qty: 60, rate: 700.00 },
+        { desc: "RM112271 - Whole Upper Sleeper", hsn: "7218", qty: 60, rate: 700.00 },
+        { desc: "RM111028 - Carriage Bolt M12x120mm", hsn: "7218", qty: 240, rate: 128.00 },
+        { desc: "RM104695 - Etrier / Stirrup", hsn: "7218", qty: 120, rate: 900.00 },
+        { desc: "RM111569 - T Form Whole Stirrup", hsn: "7218", qty: 120, rate: 1250.00 },
+        { desc: "RM102701 - Clamp A250", hsn: "7218", qty: 60, rate: 2100.00 },
+        { desc: "RM102923 - Conservator Lid 1", hsn: "7218", qty: 60, rate: 2950.00 },
+        { desc: "RM102924 - Conservator Lid 2", hsn: "7218", qty: 60, rate: 2400.00 },
+        { desc: "RM111393 - SS Tirant 290mm", hsn: "7218", qty: 240, rate: 445.00 },
+        { desc: "RM112270 - Whole Sleeper", hsn: "7218", qty: 120, rate: 8950.00 },
+        { desc: "RM104693 - Etrier Patti 50x105x6mm", hsn: "7218", qty: 240, rate: 135.00 },
+        { desc: "RM102427 - Centering Pin", hsn: "7218", qty: 60, rate: 2900.00 },
+        { desc: "RM104694 - Etrier", hsn: "7218", qty: 60, rate: 510.00 },
+        { desc: "RM101494 - Bush", hsn: "7218", qty: 60, rate: 190.00 },
+        { desc: "RM101225 - Block for Coupling", hsn: "7218", qty: 60, rate: 1427.00 },
+        { desc: "SS packing Material box", hsn: "7218", qty: 3, rate: 7500.00 }
+    ];
+
+    const itemsBody = document.getElementById('itemsBody');
+    itemsBody.innerHTML = ''; // Clear existing
+
+    defaultItems.forEach((item, index) => {
+        const row = itemsBody.insertRow();
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>
+                <input type="text" class="item-desc" list="inventoryData" placeholder="Search code or name..." value="${item.desc}" oninput="handleItemSelection(this)">
+            </td>
+            <td><input type="text" class="item-hsn" placeholder="HSN/SAC" value="${item.hsn}"></td>
+            <td><input type="number" class="item-qty" value="${item.qty}" min="1" onchange="calculateItemAmount(this)"></td>
+            <td><input type="number" class="item-rate" value="${item.rate}" step="0.01" onchange="calculateItemAmount(this)"></td>
+            <td><input type="number" class="item-amount" value="${(item.qty * item.rate).toFixed(2)}" readonly></td>
+            <td><button class="btn btn-danger" onclick="removeItem(this)">Delete</button></td>
+        `;
+    });
+    calculateTotal();
 }
 
 // Add new item row
@@ -548,6 +619,6 @@ function resetForm() {
         document.getElementById('itemsBody').innerHTML = '';
         generateInvoiceNumber();
         setTodayDate();
-        addItem();
+        addDefaultItems(); // Add default items instead of one empty item
     }
 }

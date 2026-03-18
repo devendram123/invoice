@@ -680,7 +680,6 @@ body {
 
     .invoice-page {
         padding: 5mm;
-        page-break-inside: avoid;
     }
 
     .invoice-header {
@@ -730,7 +729,6 @@ body {
 
     .invoice-items {
         margin: 6px 0;
-        page-break-inside: avoid;
     }
 
     .invoice-items table {
