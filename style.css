@@ -735,6 +735,10 @@ body {
         font-size: 0.75em;
     }
 
+    .invoice-items thead {
+        display: table-row-group;
+    }
+
     .invoice-items th,
     .invoice-items td {
         padding: 3px 5px;
