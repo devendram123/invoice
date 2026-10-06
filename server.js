@@ -10,13 +10,29 @@ const port = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
-app.use(express.static(__dirname));
 
 const INVOICE_DIR = path.join(__dirname, 'invoices');
+const DIST_DIR = path.join(__dirname, 'dist');
 
 // Ensure invoices directory exists
 if (!fs.existsSync(INVOICE_DIR)) {
     fs.mkdirSync(INVOICE_DIR);
+}
+
+// Serve invoices files directly
+app.use('/invoices', express.static(INVOICE_DIR));
+
+// Serve built frontend if dist exists, otherwise serve root
+if (fs.existsSync(DIST_DIR)) {
+    app.use(express.static(DIST_DIR));
+} else {
+    app.use(express.static(__dirname));
+}
+
+// Serve public directory for static assets
+const PUBLIC_DIR = path.join(__dirname, 'public');
+if (fs.existsSync(PUBLIC_DIR)) {
+    app.use(express.static(PUBLIC_DIR));
 }
 
 app.post('/save-invoice', async (req, res) => {
@@ -53,7 +69,8 @@ app.post('/save-invoice', async (req, res) => {
         await page.emulateMediaType('screen');
 
         // Wrap the invoice HTML in a basic template with the CSS
-        const cssContent = fs.readFileSync(path.join(__dirname, 'style.css'), 'utf8');
+        const cssPath = path.join(__dirname, 'src', 'style.css');
+        const cssContent = fs.existsSync(cssPath) ? fs.readFileSync(cssPath, 'utf8') : '';
         const fullHTML = `
             <!DOCTYPE html>
             <html>
@@ -72,7 +89,7 @@ app.post('/save-invoice', async (req, res) => {
 
         await page.setContent(fullHTML, {
             waitUntil: 'networkidle0',
-            url: `file://${path.join(__dirname, 'index.html')}` // Provides context for relative assets
+            url: `http://localhost:${port}/` // Provides context for assets like /smart_logo.png
         });
 
         const filePath = path.join(INVOICE_DIR, filename);
@@ -147,6 +164,21 @@ app.delete('/api/invoices', (req, res) => {
     } catch (err) {
         res.status(500).send('Error clearing invoices: ' + err.message);
     }
+});
+
+// Fallback to React app
+app.use((req, res, next) => {
+    if (req.method !== 'GET') {
+        return next();
+    }
+    if (req.path.startsWith('/api') || req.path.startsWith('/invoices')) {
+        return next();
+    }
+    const distIndex = path.join(DIST_DIR, 'index.html');
+    if (fs.existsSync(distIndex)) {
+        return res.sendFile(distIndex);
+    }
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.listen(port, () => {

@@ -53,6 +53,9 @@ RUN npm install
 # Copy the rest of the application
 COPY . .
 
+# Build the React frontend
+RUN npm run build
+
 # Create the invoices directory
 RUN mkdir -p invoices
 

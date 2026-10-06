@@ -467,6 +467,17 @@ body {
     background: #c82333;
 }
 
+.btn-whatsapp {
+    background: #25D366;
+    color: white;
+}
+
+.btn-whatsapp:hover {
+    background: #1ebc59;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(37, 211, 102, 0.3);
+}
+
 .action-buttons {
     display: flex;
     gap: 15px;
@@ -1037,6 +1048,7 @@ body {
 
 @media print {
 
+    .no-print,
     .nav-bar,
     .preview-actions,
     .invoice-form,
