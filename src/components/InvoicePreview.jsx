@@ -148,34 +148,36 @@ export default function InvoicePreview({
                         </div>
                     </div>
 
-                    <div className="invoice-items" style={{ marginTop: '15px' }}>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style={{ width: '40px' }}>Sr. No.</th>
-                                    <th>Product Description</th>
-                                    <th style={{ width: '80px' }}>HSN CODE</th>
-                                    <th style={{ width: '70px' }}>QUANTITY</th>
-                                    <th style={{ width: '100px' }}>RATE Rs.</th>
-                                    <th style={{ width: '120px' }}>TOTAL AMOUNT Rs.</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {formData.items.map((item, idx) => (
-                                    <tr key={idx}>
-                                        <td style={{ textAlign: 'center' }}>{idx + 1}</td>
-                                        <td style={{ textAlign: 'left' }}>{item.desc}</td>
-                                        <td style={{ textAlign: 'center' }}>{item.hsn}</td>
-                                        <td style={{ textAlign: 'center' }}>{item.qty}</td>
-                                        <td className="amount">{(parseFloat(item.rate) || 0).toFixed(2)}</td>
-                                        <td className="amount">{(parseFloat(item.amount) || 0).toFixed(2)}</td>
+                    <div className="invoice-items">
+                        <div className="invoice-table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '40px' }}>Sr. No.</th>
+                                        <th>Product Description</th>
+                                        <th style={{ width: '80px' }}>HSN CODE</th>
+                                        <th style={{ width: '70px' }}>QUANTITY</th>
+                                        <th style={{ width: '100px' }}>RATE Rs.</th>
+                                        <th style={{ width: '120px' }}>TOTAL AMOUNT Rs.</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {formData.items.map((item, idx) => (
+                                        <tr key={idx}>
+                                            <td style={{ textAlign: 'center' }}>{idx + 1}</td>
+                                            <td style={{ textAlign: 'left' }}>{item.desc}</td>
+                                            <td style={{ textAlign: 'center' }}>{item.hsn}</td>
+                                            <td style={{ textAlign: 'center' }}>{item.qty}</td>
+                                            <td className="amount">{(parseFloat(item.rate) || 0).toFixed(2)}</td>
+                                            <td className="amount">{(parseFloat(item.amount) || 0).toFixed(2)}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
-                    <div style={{ display: 'grid', gridTemplateColumns: '1.5fr 1fr', gap: '10px', marginTop: '15px' }}>
+                    <div className="invoice-footer-grid">
                         <div>
                             <p style={{ fontSize: '0.75em', borderBottom: '1px solid #ddd', paddingBottom: '5px' }}>
                                 Payment within................Days.

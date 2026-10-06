@@ -168,7 +168,7 @@ export default function InvoiceForm({
                             onChange={(e) => handleChange('companyBusiness', e.target.value)}
                         />
                     </div>
-                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <div className="form-group col-span-2">
                         <label>Company Address:</label>
                         <textarea
                             rows="2"
@@ -307,7 +307,7 @@ export default function InvoiceForm({
                             onChange={(e) => handleChange('buyerMobile', e.target.value)}
                         />
                     </div>
-                    <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                    <div className="form-group col-span-2">
                         <label>Buyer Address:</label>
                         <textarea
                             rows="2"
@@ -372,10 +372,10 @@ export default function InvoiceForm({
 
             {/* Items Section */}
             <div className="section">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '15px' }}>
-                    <h3 style={{ margin: 0 }}>Items ({formData.items.length})</h3>
-                    <div style={{ display: 'flex', gap: '10px' }}>
-                        <button type="button" className="btn btn-secondary" onClick={handleLoadDefaultItems} style={{ fontSize: '13px', padding: '6px 12px' }}>
+                <div className="items-header">
+                    <h3>Items ({formData.items.length})</h3>
+                    <div className="items-header-actions">
+                        <button type="button" className="btn btn-secondary" onClick={handleLoadDefaultItems}>
                             Reset to Default 46 Items
                         </button>
                         <button type="button" className="btn btn-add" onClick={addItem}>
