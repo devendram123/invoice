@@ -1119,13 +1119,13 @@ html, body {
         white-space: nowrap !important;
     }
 
-    /* Print pagination control */
+    /* Print pagination control - header appears once on page 1 and continues seamlessly */
     thead {
-        display: table-header-group !important;
+        display: table-row-group !important;
     }
 
     tfoot {
-        display: table-footer-group !important;
+        display: table-row-group !important;
     }
 
     tr {
