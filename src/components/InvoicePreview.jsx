@@ -23,7 +23,14 @@ export default function InvoicePreview({
     const amountInWords = numberToWords(totals.grandTotal);
 
     const handlePrint = () => {
+        const invoiceNo = formData.invoiceNo ? formData.invoiceNo.trim() : 'Invoice';
+        const safeFilename = invoiceNo.replace(/[^a-zA-Z0-9]/g, '_');
+        const originalTitle = document.title;
+        document.title = safeFilename;
         window.print();
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 1000);
     };
 
     const handleSaveAsPDF = () => {

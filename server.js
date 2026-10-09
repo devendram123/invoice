@@ -35,6 +35,25 @@ if (fs.existsSync(PUBLIC_DIR)) {
     app.use(express.static(PUBLIC_DIR));
 }
 
+function getChromeExecutablePath() {
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+        return process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+    const commonPaths = [
+        'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+        'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+        'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+        'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+        '/usr/bin/google-chrome-stable',
+        '/usr/bin/chromium',
+        '/usr/bin/chromium-browser'
+    ];
+    for (const p of commonPaths) {
+        if (fs.existsSync(p)) return p;
+    }
+    return undefined;
+}
+
 app.post('/save-invoice', async (req, res) => {
     const { html, filename, metadata } = req.body;
 
@@ -49,47 +68,65 @@ app.post('/save-invoice', async (req, res) => {
             const jsonPath = path.join(INVOICE_DIR, jsonFilename);
             fs.writeFileSync(jsonPath, JSON.stringify({ ...metadata, html }, null, 2));
         }
-        const browser = await puppeteer.launch({
+
+        const execPath = getChromeExecutablePath();
+        const launchOptions = {
             headless: 'new',
-            executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || null,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
                 '--disable-dev-shm-usage',
                 '--disable-gpu'
             ]
-        });
+        };
+        if (execPath) {
+            launchOptions.executablePath = execPath;
+        }
+
+        const browser = await puppeteer.launch(launchOptions);
         const page = await browser.newPage();
 
-        // Set viewport to standard desktop size to avoid mobile breakpoints
-        await page.setViewport({ width: 1200, height: 800 });
+        // Emulate print media so that @media print rules apply with exact A4 physical boundaries
+        await page.emulateMediaType('print');
 
-        // Emulate screen media to match the preview exactly, 
-        // but A4 PDF generation will handle the format
-        await page.emulateMediaType('screen');
+        // Embed logo as base64 data URI if available for guaranteed offline rendering
+        let processedHtml = html;
+        const logoPath = path.join(__dirname, 'public', 'smart_logo.png');
+        if (fs.existsSync(logoPath)) {
+            const logoBase64 = fs.readFileSync(logoPath).toString('base64');
+            const logoDataUri = `data:image/png;base64,${logoBase64}`;
+            processedHtml = processedHtml.replace(/src=["']\/?smart_logo\.png["']/g, `src="${logoDataUri}"`);
+        }
 
-        // Wrap the invoice HTML in a basic template with the CSS
+        // Read CSS
         const cssPath = path.join(__dirname, 'src', 'style.css');
         const cssContent = fs.existsSync(cssPath) ? fs.readFileSync(cssPath, 'utf8') : '';
+
+        // Ensure proper outer hierarchy matching preview
+        const wrappedHtml = processedHtml.includes('invoice-page')
+            ? processedHtml
+            : `<div class="invoice-page">${processedHtml}</div>`;
+        const fullContent = wrappedHtml.includes('invoice-document')
+            ? wrappedHtml
+            : `<div class="invoice-document">${wrappedHtml}</div>`;
+
         const fullHTML = `
             <!DOCTYPE html>
             <html>
             <head>
+                <meta charset="utf-8">
                 <style>${cssContent}</style>
-                <style>
-                    body { background: white !important; padding: 0 !important; margin: 0 !important; }
-                    .invoice-document { box-shadow: none !important; border: none !important; margin: 0 !important; padding: 0 !important; }
-                </style>
             </head>
             <body>
-                ${html}
+                <div class="invoice-preview">
+                    ${fullContent}
+                </div>
             </body>
             </html>
         `;
 
         await page.setContent(fullHTML, {
-            waitUntil: 'networkidle0',
-            url: `http://localhost:${port}/` // Provides context for assets like /smart_logo.png
+            waitUntil: 'networkidle0'
         });
 
         const filePath = path.join(INVOICE_DIR, filename);
@@ -97,7 +134,8 @@ app.post('/save-invoice', async (req, res) => {
             path: filePath,
             format: 'A4',
             printBackground: true,
-            margin: { top: '0', right: '0', bottom: '0', left: '0' }
+            preferCSSPageSize: true,
+            margin: { top: '8mm', right: '10mm', bottom: '10mm', left: '10mm' }
         });
 
         await browser.close();
